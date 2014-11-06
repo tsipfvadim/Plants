@@ -1,0 +1,15 @@
+//
+//  TMWallNut.h
+//  Plants
+//
+//  Created by Admin on 05.11.14.
+//  Copyright (c) 2014 tsipfvadim. All rights reserved.
+//
+
+#import "TMPlant.h"
+
+@interface TMWallNut : TMPlant
+-(void)defenseMode;//Вдвічі зменшує ноносимий урон, але не може атакувати (лише контратака)
+-(void)shotgunAttack:(TMPlant*)obj;//Одноразова атака подвійною силою
+-(void)increaseMaxHealthOfObject:(TMPlant*)obj;//Одноразове збільшення на 25 одиніць MaxHealth і Health об'єкта, за рахунок зменшення власного на 50 одиниць
+@end
