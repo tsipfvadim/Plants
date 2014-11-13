@@ -35,9 +35,13 @@
     }
     if (_defense){
         _defense=NO;
+        _maxHealth/=2;
+        _health/=2;
         NSLog(@"\n  %@ in Normal mode",self.name);
     }else{
         _defense=YES;
+        _maxHealth*=2;
+        _health*=2;
         NSLog(@"\n  %@ in Defense mode",self.name);
     }
 }
@@ -46,54 +50,11 @@
         NSLog(@"\n  %@ is Dead! I can't attack.",self.name);
         return ;
     }
-    if (obj->_isDead) {
-        NSLog(@"\n  %@ is Dead! Don't beat lying.",obj.name);
-        return ;
-    }
     if (_defense) {
         NSLog(@"\n  %@ in Defense mode! I can't attack.",self.name);
         return ;
     }
-    SEL selector = NSSelectorFromString(@"attackedBy:");
-    [obj performSelector:selector withObject:self];
-    NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
-}
--(void)attackedBy:(TMPlant*)obj{
-    UInt rDamage;
-    if (_defense) {
-        rDamage=obj.damage/2;
-    }else{
-        rDamage=obj.damage;
-    }
-    if (rDamage>=self.health) {
-        _health=0;
-        _isDead=YES;
-        NSLog(@"\n  %@ killed %@!",obj.name,self.name);
-        return;
-    }
-    _health-=rDamage;
-    SEL selector = NSSelectorFromString(@"counterAttackedBy:");
-    [obj performSelector:selector withObject:self];
-}
--(void)counterAttackedBy:(TMPlant*)obj{
-    if (_isDead) {
-        return;
-    }
-    UInt rDamage;
-    if (_defense) {
-        rDamage=obj.damage/4;
-    }else{
-        rDamage=obj.damage/2;
-    }
-    //Перевірка self isDead
-    if (rDamage>=self.health) {
-        _health=0;
-        _isDead=YES;
-        NSLog(@"\n  %@ killed %@!",obj.name,self.name);
-        return;
-    }
-    //зменшення одиниць здоров'я
-    _health-=rDamage;
+    [super attack:obj];
 }
 
 -(void)shotgunAttack:(TMPlant*)obj{
@@ -115,13 +76,10 @@
     }
     
     NSLog(@"\n  %@ use Shotgun!",self);
-
     _damage*=2;
-    SEL selector = NSSelectorFromString(@"attackedBy:");
-    [obj performSelector:selector withObject:self];
+    [super attack:obj];
     _shotgunCount+=1;
     _damage/=2;
-    NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
 }
 -(void)increaseMaxHealthOfObject:(TMPlant*)obj{
     if (_isDead) {

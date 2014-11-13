@@ -14,7 +14,7 @@
 @property (nonatomic, readonly) UInt damage;
 @property (nonatomic, copy) NSString* name;
 
--(void)dazzlingMode;//Ворог осліплений і проходить лише частина урону. Зменшуэться власний урон.
+-(void)dazzlingMode;//Атакований ворог засліплений і проходить лише частина контратаки. Зменшуэться власний урон.
 -(void)superRecovery;//Відновлення на 45 одиниць свого здоров'я(лише один раз).
 -(void)recoveryHealthOfObject:(TMPlant*)obj;//Відновлення здоров'я обєкту
 @end

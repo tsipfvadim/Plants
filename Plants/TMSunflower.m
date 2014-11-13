@@ -12,6 +12,7 @@
     BOOL _dazzling;
     UInt _superRecoveryCount;
 }
+
 -(instancetype)initWithName:(NSString*)name{
     self=[super init];
     if (self) {
@@ -26,9 +27,10 @@
     }
     return self;
 }
+
 -(void)dazzlingMode{
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't do it.",self.name);
+        NSLog(@"\n  %@ is Dead and can't do it.",self.name);
         return ;
     }
     if (_dazzling) {
@@ -37,50 +39,23 @@
         NSLog(@"\n  %@ in Normal mode",self.name);
     }else{
         _dazzling=YES;
-        _damage=10;
+        _damage=13;
         NSLog(@"\n  %@ in Dazzling mode",self.name);
     }
 }
--(void)attackedBy:(TMPlant*)obj{
-    UInt rDamage;
+
+-(void)attack:(TMPlant*)obj{
+    UInt damageOfObject=obj.damage;
     if (_dazzling) {
-        rDamage=arc4random_uniform(obj.damage);
-    }else{
-        rDamage=obj.damage;
+        obj->_damage=arc4random_uniform(obj.damage);
     }
-    if (rDamage>=self.health) {
-        _health=0;
-        _isDead=YES;
-        NSLog(@"\n  %@ killed %@!",obj.name,self.name);
-        return;
-    }
-    _health-=rDamage;
-    SEL selector = NSSelectorFromString(@"counterAttackedBy:");
-    [obj performSelector:selector withObject:self];
+    [super attack:obj];
+    obj->_damage=damageOfObject;
 }
--(void)counterAttackedBy:(TMPlant*)obj{
-    if (_isDead) {
-        return;
-    }
-    UInt rDamage;
-    if (_dazzling) {
-        rDamage=arc4random_uniform(obj.damage/2);
-    }else{
-        rDamage=obj.damage/2;
-    }
-    //Перевірка self isDead
-    if (rDamage>=self.health) {
-        _health=0;
-        _isDead=YES;
-        NSLog(@"\n  %@ killed %@!",obj.name,self.name);
-        return;
-    }
-    //зменшення одиниць здоров'я
-    _health-=rDamage;
-}
+
 -(void)superRecovery{
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't do it.",self.name);
+        NSLog(@"\n  %@ is Dead and can't do it.",self.name);
         return ;
     }
     if (_superRecoveryCount>0) {
@@ -97,7 +72,7 @@
 }
 -(void)recoveryHealthOfObject:(TMPlant*)obj{
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't do it.",self.name);
+        NSLog(@"\n  %@ is Dead and can't do it.",self.name);
         return ;
     }
     if (obj->_isDead) {

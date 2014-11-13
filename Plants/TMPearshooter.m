@@ -44,27 +44,20 @@
     }
 }
 -(void)attack:(TMPlant *)obj{
-    if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't attack.",self.name);
-        return ;
-    }
-    if (obj->_isDead) {
-        NSLog(@"\n  %@ is Dead! Don't beat lying.",obj.name);
-        return ;
-    }
-    if (_fire) {
+    [super attack:obj];
+    if (!_isDead||_fire) {
         if (_health<=10) {
             _health=0;
             _isDead=YES;
-        }else{_health-=10;}
+            NSLog(@"\n  %@ has Dead in Fire mode.",obj.name);
+        }else{
+            _health-=10;
+        }
     }
-    SEL selector = NSSelectorFromString(@"attackedBy:");
-    [obj performSelector:selector withObject:self];
-    NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
 }
 -(void)machineGunAttack:(TMPlant*)obj{
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't attack.",self.name);
+        NSLog(@"\n  %@ is Dead and can't attack!",self.name);
         return ;
     }
     if (obj->_isDead) {
@@ -85,13 +78,12 @@
             damage+=1;
         }
     }
+    UInt selfDamage=_damage;
     _damage*=damage;
     NSLog(@"\n  %d hit(s) with machineGun!",damage);
-    SEL selector = NSSelectorFromString(@"attackedBy:");
-    [obj performSelector:selector withObject:self];
+    [super attack:obj];
     _machineGunCoun+=1;
-    _damage=20;
-        NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
+    _damage=selfDamage;
 }
 -(void)increaseDamageOfObject:(TMPlant*)obj{
     if (_isDead) {

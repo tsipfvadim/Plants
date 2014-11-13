@@ -9,7 +9,7 @@
 #import "TMPlant.h"
 
 @interface TMWallNut : TMPlant
--(void)defenseMode;//Вдвічі зменшує ноносимий урон, але не може атакувати (лише контратака)
+-(void)defenseMode;//Збільшення вдвічі Health і MaxHealth. Не може атакувати, ліше контратака.
 -(void)shotgunAttack:(TMPlant*)obj;//Одноразова атака подвійною силою
 -(void)increaseMaxHealthOfObject:(TMPlant*)obj;//Одноразове збільшення на 25 одиніць MaxHealth і Health об'єкта, за рахунок зменшення власного на 50 одиниць
 @end

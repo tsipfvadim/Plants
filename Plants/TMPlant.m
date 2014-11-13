@@ -9,6 +9,7 @@
 #import "TMPlant.h"
 
 @implementation TMPlant
+
 -(instancetype)initWithName:(NSString*)name{
     self=[super init];
     if (self) {
@@ -23,59 +24,43 @@
 }
 
 -(void)attack:(TMPlant*)obj{
-    //Перевірка self isDead
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't attack.",self.name);
+        NSLog(@"\n  %@ is Dead and can't attack!",self.name);
         return ;
     }
-    //Перевірка obj isDead
     if (obj->_isDead) {
         NSLog(@"\n  %@ is Dead! Don't beat lying.",obj.name);
         return ;
     }
-    //Атака
-    SEL selector = NSSelectorFromString(@"attackedBy:");
-    [obj performSelector:selector withObject:self];
-    NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
-}
-
--(void)attackedBy:(TMPlant*)obj{
-    //Перевірка self isDead
-    if (obj.damage>=self.health) {
-        _health=0;
-        _isDead=YES;
-        NSLog(@"\n  %@ killed %@!",obj.name,self.name);
+    //Атаку
+    if (self.damage>=obj.health) {
+        obj->_health=0;
+        obj->_isDead=YES;
+        NSLog(@"\n  %@ killed %@!",self.name,obj.name);
         return;
     }
-    //зменшення одиниць здоров'я
-    _health-=obj.damage;
-    //контратака
-    SEL selector = NSSelectorFromString(@"counterAttackedBy:");
-    [obj performSelector:selector withObject:self];
-}
--(void)counterAttackedBy:(TMPlant*)obj{
-    if (_isDead) {
-        return;
-    }
-    //Перевірка self isDead
+    obj->_health-=self.damage;
+    //Контратака
     if (obj.damage/2>=self.health) {
         _health=0;
         _isDead=YES;
         NSLog(@"\n  %@ killed %@!",obj.name,self.name);
         return;
     }
-    //зменшення одиниць здоров'я
     _health-=obj.damage/2;
+    NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
 }
+
 -(void)recoveryOfHealth{
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't recovery yourself.",self.name);
+        NSLog(@"\n  %@ is Dead and can't recovery yourself.",self.name);
         return ;
     }
-    if (_health+_rHealth>_maxHealth) {
-        _health=_maxHealth;
+    if (_health+_rHealth > _maxHealth) {
+        _health = _maxHealth;
+    }else{
+        _health += _rHealth;
     }
-    _health+=_rHealth;
 }
 -(NSString*)description{
     return [NSString stringWithFormat:@"%@ (%u/%u)",self.name, self.health,self.maxHealth];

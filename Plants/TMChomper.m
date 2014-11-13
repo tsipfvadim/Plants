@@ -37,39 +37,35 @@
     }
 }
 -(void)attack:(TMPlant*)obj{
-    if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't attack.",self.name);
-        return ;
-    }
-    if (obj->_isDead) {
-        NSLog(@"\n  %@ is Dead! Don't beat lying.",obj.name);
-        return ;
-    }
     if (_devour&&_devourCount==0) {
+        if (_isDead) {
+            NSLog(@"\n  %@ is Dead and can't attack!",self.name);
+            return ;
+        }
+        if (obj->_isDead) {
+            NSLog(@"\n  %@ is Dead! Don't beat lying.",obj.name);
+            return ;
+        }
         obj->_health=0;
         obj->_isDead=YES;
         NSLog(@"\n  %@ devoured %@",self.name,obj.name);
         _devourCount+=1;
         _damage=0;
     }else{
-        SEL selector = NSSelectorFromString(@"attackedBy:");
-        [obj performSelector:selector withObject:self];
-        NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
+        [super attack:obj];
     }
 }
 
 -(void)explosionObject:(TMPlant*)obj{
     if (_isDead) {
-        NSLog(@"\n  %@ is Dead! I can't attack.",self.name);
+        NSLog(@"\n  %@ is Dead and can't attack.",self.name);
         return ;
     }
     _health=0;
-    _isDead=YES;
     _damage=75;
     NSLog(@"\n  %@ exploded!",self.name);
-    SEL selector = NSSelectorFromString(@"attackedBy:");
-    [obj performSelector:selector withObject:self];
-     NSLog(@"\n  %@ attack %@\n  %@    %@",self.name,obj.name,obj,self);
+    [super attack:obj];
+    _isDead=YES;
 }
 -(void)giveHealthToObject:(TMPlant*)obj{
     if (_isDead) {
